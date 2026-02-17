@@ -185,10 +185,26 @@ const app = {
         app.dom.explanationArea.classList.remove('visible');
         app.dom.nextBtn.style.display = 'none';
 
-        q.choices.forEach((choice, index) => {
+        // Shuffle choices
+        const choicesWithIndex = q.choices.map((choice, idx) => ({
+            text: choice,
+            originalIndex: idx
+        }));
+
+        // Fisher-Yates shuffle
+        for (let i = choicesWithIndex.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [choicesWithIndex[i], choicesWithIndex[j]] = [choicesWithIndex[j], choicesWithIndex[i]];
+        }
+
+        // Find new position of correct answer
+        app.currentCorrectIndex = choicesWithIndex.findIndex(item => item.originalIndex === q.answer);
+
+        // Render shuffled choices
+        choicesWithIndex.forEach((item, index) => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
-            btn.textContent = choice;
+            btn.textContent = item.text;
             btn.onclick = () => app.handleAnswer(index, btn);
             app.dom.choicesContainer.appendChild(btn);
         });
@@ -198,11 +214,11 @@ const app = {
         if (app.dom.nextBtn.style.display === 'block') return; // Prevent double click
 
         const q = app.questions.getCurrentQuestion();
-        const isCorrect = selectedIndex === q.answer;
+        const isCorrect = selectedIndex === app.currentCorrectIndex;
 
         // Visual Feedback
         const buttons = app.dom.choicesContainer.querySelectorAll('.choice-btn');
-        buttons[q.answer].classList.add('correct');
+        buttons[app.currentCorrectIndex].classList.add('correct');
         if (!isCorrect) {
             btnElement.classList.add('wrong');
             app.session.wrongQuestions.push(q);
