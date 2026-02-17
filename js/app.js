@@ -5,72 +5,77 @@
 
 const app = {
     init: async () => {
-        console.log("App initializing...");
-        // Initialize Managers
-        app.storage = new StorageManager();
-        app.sound = new SoundManager();
-        app.questions = new QuestionManager();
-        app.calendar = new CalendarManager(app.storage);
+        try {
+            console.log("App initializing...");
+            // Initialize Managers
+            app.storage = new StorageManager();
+            app.sound = new SoundManager();
+            app.questions = new QuestionManager();
+            app.calendar = new CalendarManager(app.storage);
 
-        // Load Data
-        const loaded = await app.questions.loadQuestions();
-        if (!loaded) {
-            console.error("Critical: Failed to load question data.");
-            alert("データの読み込みに失敗しました。ローカルセキュリティ制限の可能性があります。");
-            return;
-        }
-        console.log("Data loaded successfully.");
+            // Load Data
+            const loaded = await app.questions.loadQuestions();
+            if (!loaded) {
+                console.error("Critical: Failed to load question data.");
+                alert("データの読み込みに失敗しました。詳細についてはブラウザのコンソール（F12）を確認してください。");
+                return;
+            }
+            console.log("Data loaded successfully.");
 
+            // Cache DOM
+            app.dom = {
+                screens: document.querySelectorAll('.screen'),
+                home: document.getElementById('screen-home'),
+                quiz: document.getElementById('screen-quiz'),
+                result: document.getElementById('screen-result'),
+                // Home Elements
+                streakCount: document.getElementById('streak-count'),
+                totalAnswered: document.getElementById('total-answered'),
+                correctRate: document.getElementById('correct-rate'),
+                calendarContainer: document.getElementById('calendar-container'),
+                reviewBtn: document.getElementById('btn-review'),
+                // Quiz Elements
+                progressBar: document.getElementById('progress-bar'),
+                questionText: document.getElementById('question-text'),
+                choicesContainer: document.getElementById('choices-container'),
+                explanationArea: document.getElementById('explanation-area'),
+                explanationText: document.getElementById('explanation-text'),
+                nextBtn: document.getElementById('next-btn'),
+                questionIdDisplay: document.getElementById('question-id'),
+                // Result Elements
+                resultScore: document.getElementById('result-score'),
+                resultCircle: document.getElementById('result-circle'),
+                resultMessage: document.getElementById('result-message'),
+                wrongList: document.getElementById('wrong-list-container')
+            };
 
-        // Cache DOM
-        app.dom = {
-            screens: document.querySelectorAll('.screen'),
-            home: document.getElementById('screen-home'),
-            quiz: document.getElementById('screen-quiz'),
-            result: document.getElementById('screen-result'),
-            // Home Elements
-            streakCount: document.getElementById('streak-count'),
-            totalAnswered: document.getElementById('total-answered'),
-            correctRate: document.getElementById('correct-rate'),
-            calendarContainer: document.getElementById('calendar-container'),
-            reviewBtn: document.getElementById('btn-review'),
-            // Quiz Elements
-            progressBar: document.getElementById('progress-bar'),
-            questionText: document.getElementById('question-text'),
-            choicesContainer: document.getElementById('choices-container'),
-            explanationArea: document.getElementById('explanation-area'),
-            explanationText: document.getElementById('explanation-text'),
-            nextBtn: document.getElementById('next-btn'),
-            questionIdDisplay: document.getElementById('question-id'),
-            // Result Elements
-            resultScore: document.getElementById('result-score'),
-            resultCircle: document.getElementById('result-circle'),
-            resultMessage: document.getElementById('result-message'),
-            wrongList: document.getElementById('wrong-list-container')
-        };
+            // Bind Events
+            document.getElementById('btn-start-random').addEventListener('click', () => app.startQuiz('random'));
+            document.getElementById('btn-start-all').addEventListener('click', () => app.startQuiz('sequential'));
 
-        // Render Home
-        app.renderHome();
-        app.switchScreen('home');
+            const resumeBtn = document.getElementById('btn-resume');
+            if (resumeBtn) {
+                resumeBtn.addEventListener('click', () => app.startQuiz('resume'));
+            }
 
-        // Bind Events
-        document.getElementById('btn-start-random').addEventListener('click', () => app.startQuiz('random'));
-        document.getElementById('btn-start-all').addEventListener('click', () => app.startQuiz('sequential'));
+            app.dom.reviewBtn.addEventListener('click', () => app.startQuiz('review'));
+            app.dom.nextBtn.addEventListener('click', () => app.nextQuestion());
+            document.getElementById('btn-suspend').addEventListener('click', () => app.suspendQuiz());
+            document.getElementById('btn-home').addEventListener('click', () => {
+                app.renderHome();
+                app.switchScreen('home');
+            });
+            document.getElementById('btn-retry').addEventListener('click', () => app.startQuiz('random'));
 
-        // Dynamic Resume Button
-        const resumeBtn = document.getElementById('btn-resume');
-        if (resumeBtn) {
-            resumeBtn.addEventListener('click', () => app.startQuiz('resume'));
-        }
-
-        app.dom.reviewBtn.addEventListener('click', () => app.startQuiz('review'));
-        app.dom.nextBtn.addEventListener('click', () => app.nextQuestion());
-        document.getElementById('btn-suspend').addEventListener('click', () => app.suspendQuiz());
-        document.getElementById('btn-home').addEventListener('click', () => {
+            // Initial Render
             app.renderHome();
             app.switchScreen('home');
-        });
-        document.getElementById('btn-retry').addEventListener('click', () => app.startQuiz('random')); // Simplified retry
+
+            console.log("App initialization complete.");
+        } catch (error) {
+            console.error("App Initialization Failed:", error);
+            alert("アプリの初期化中にエラーが発生しました: " + error.message);
+        }
     },
 
     renderHome: () => {

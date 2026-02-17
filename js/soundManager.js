@@ -6,7 +6,12 @@
 class SoundManager {
     constructor() {
         this.enabled = true;
-        this.context = new (window.AudioContext || window.webkitAudioContext)();
+        this.context = null;
+        try {
+            this.context = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.warn('Web Audio API not supported:', e);
+        }
         this.sounds = {
             correct: 'assets/correct.mp3',
             wrong: 'assets/wrong.mp3',
@@ -20,15 +25,12 @@ class SoundManager {
     }
 
     play(type) {
-        if (!this.enabled) return;
-
-        // Try to play file, fallback to synth if fails (or if file interaction is blocked)
-        // For this demo, since we don't have actual files, we will use Oscillator as primary for reliability.
-        // If user provides files, we could switch logic.
+        if (!this.enabled || !this.context) return;
         this._playSynth(type);
     }
 
     _playSynth(type) {
+        if (!this.context) return;
         if (this.context.state === 'suspended') {
             this.context.resume();
         }

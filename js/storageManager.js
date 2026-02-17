@@ -19,9 +19,8 @@ const defaultData = {
         max: 0,
         lastLoginDate: null
     },
-    perfectClear: {
-        // "A001": true
-    },
+    perfectClear: {},
+    wrongHistory: {},
     resumeData: null,
     lastSession: null
 };
