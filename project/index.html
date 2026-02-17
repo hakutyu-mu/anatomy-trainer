@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomy National Exam Trainer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts for premium feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="title">Anatomy Trainer</div>
+            <div class="streak-badge" id="streak-count">🔥 0日連続</div>
+        </header>
+
+        <!-- Home Screen -->
+        <main id="screen-home" class="screen active">
+            <div class="dashboard-grid">
+                <div class="card stats-summary">
+                    <div class="stat-label">本日の正答率</div>
+                    <div class="big-stat" id="correct-rate">0%</div>
+                    <div style="font-size:0.85rem; color:var(--text-light); margin-top:0.25rem;" id="last-session-rate">
+                        -</div>
+                    <div class="stat-label" style="margin-top:0.5rem;">累計回答数: <span id="total-answered">0</span></div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom:1rem; font-size:1rem;">学習カレンダー</h3>
+                    <div id="calendar-container"></div>
+                </div>
+            </div>
+
+            <div class="mode-selector">
+                <button id="btn-resume" class="btn btn-primary" style="display:none; background:#8b5cf6;">
+                    <span>⏯️</span> 続きから再開
+                </button>
+                <button id="btn-start-random" class="btn btn-primary">
+                    <span>🎲</span> ランダム出題 (全104問)
+                </button>
+                <button id="btn-start-all" class="btn btn-secondary">
+                    <span>📝</span> 順番通りに出題
+                </button>
+                <button id="btn-review" class="btn btn-danger">
+                    <span>⚡</span> 間違えた問題のみ (0) - 復習
+                </button>
+            </div>
+
+            <p style="text-align:center; margin-top:2rem; font-size:0.8rem; color:var(--text-light);">
+                Ver 1.0 | Data Saved Locally
+            </p>
+        </main>
+
+        <!-- Quiz Screen -->
+        <main id="screen-quiz" class="screen">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                <button id="btn-suspend"
+                    style="background:none; border:none; color:var(--text-light); cursor:pointer; font-size:0.9rem;">
+                    ⏸ 中断する
+                </button>
+                <div style="font-size:0.9rem; color:var(--text-light);" id="question-id">Q.1</div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text" id="question-text">
+                    問題文読み込み中...
+                </div>
+
+                <div class="choices-grid" id="choices-container">
+                    <!-- Choices injected here -->
+                </div>
+
+                <div id="explanation-area" class="explanation-area">
+                    <div style="font-weight:bold; margin-bottom:0.5rem;">解説</div>
+                    <div id="explanation-text"></div>
+                </div>
+            </div>
+
+            <button id="next-btn" class="btn btn-primary"
+                style="display:none; position:sticky; bottom:1rem; box-shadow:0 4px 20px rgba(0,0,0,0.2);">
+                次の問題へ ➜
+            </button>
+        </main>
+
+        <!-- Result Screen -->
+        <main id="screen-result" class="screen">
+            <div class="card" style="text-align:center;">
+                <h2 style="margin-bottom:2rem;">結果発表</h2>
+
+                <div class="result-circle" id="result-circle">
+                    <div class="result-score" id="result-score">80%</div>
+                </div>
+
+                <p id="result-message" style="margin-bottom:2rem; font-weight:600;">10問中 8問正解！</p>
+
+                <div class="mode-selector">
+                    <button id="btn-retry" class="btn btn-primary">もう一度挑戦</button>
+                    <button id="btn-home" class="btn btn-secondary">ホームに戻る</button>
+                </div>
+            </div>
+
+            <div id="wrong-list-container" style="margin-top:2rem;">
+                <!-- Wrong answers list -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data/questions-data.js"></script>
+    <script src="js/storageManager.js"></script>
+    <script src="js/soundManager.js"></script>
+    <script src="js/questionManager.js"></script>
+    <script src="js/calendarManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
