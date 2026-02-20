@@ -13,11 +13,11 @@
     <style>
         /* CSS Content from style.css */
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
+            --primary: #ff62b1;
+            --primary-dark: #ff0080;
             --success: #10b981;
             --danger: #ef4444;
-            --background: #f8fafc;
+            --background: #faf8f8;
             --surface: #ffffff;
             --text: #1e293b;
             --text-light: #64748b;
@@ -325,7 +325,6 @@
             aspect-ratio: 1;
             display: flex;
             flex-direction: column;
-            /* Changed for stats */
             align-items: center;
             justify-content: center;
             font-size: 0.875rem;
@@ -396,7 +395,7 @@
             </div>
 
             <div class="mode-selector">
-                <button id="btn-resume" class="btn btn-primary" style="display:none; background:#8b5cf6;">
+                <button id="btn-resume" class="btn btn-primary" style="display:none; background:#f370ff;">
                     <span>⏯️</span> 続きから再開
                 </button>
                 <button id="btn-start-random" class="btn btn-primary">
@@ -1894,7 +1893,11 @@
                     if (log) { classes += ' active'; }
                     html += `<div class="${classes}" data-date="${dateStr}">
                     <span class="day-num">${d}</span>
-                    ${log ? `<div style="font-size:0.6rem; margin-top:2px;">${log.correctRate}%</div>` : ''}
+                    ${log ? `
+                    <div style="font-size:0.5rem; line-height:1.1; margin-top:2px;">
+                        <div>${log.correctRate}%</div>
+                        <div>${log.totalCount}問</div>
+                    </div>` : ''}
                 </div>`;
                 }
                 html += '</div>';

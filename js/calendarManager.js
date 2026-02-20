@@ -49,7 +49,11 @@ class CalendarManager {
 
             html += `<div class="${classes}" data-date="${dateStr}">
                 <span class="day-num">${d}</span>
-                ${log ? `<div style="font-size:0.6rem; margin-top:2px;">${log.correctRate}%</div>` : ''}
+                ${log ? `
+                <div style="font-size:0.5rem; line-height:1.1; margin-top:2px;">
+                    <div>${log.correctRate}%</div>
+                    <div>${log.totalCount}問</div>
+                </div>` : ''}
             </div>`;
         }
 
